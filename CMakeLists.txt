@@ -12,8 +12,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_library(MEDIAPLAYER_FRAMEWORK NAMES MediaPlayer REQUIRED)
 find_library(FOUNDATION_FRAMEWORK NAMES Foundation REQUIRED)
 
-find_package(QT NAMES Qt5 COMPONENTS Widgets Gui Core REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Gui Core REQUIRED)
+find_package(QT NAMES Qt5 COMPONENTS MacExtras Widgets Gui Core REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS MacExtras Widgets Gui Core REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(QmmpUi REQUIRED IMPORTED_TARGET qmmpui)
@@ -30,6 +30,7 @@ add_library(macosintegration MODULE
 target_include_directories(macosintegration PUBLIC "${MEDIAPLAYER_FRAMEWORK}/Headers")
 
 target_link_libraries(macosintegration PRIVATE
+    Qt${QT_VERSION_MAJOR}::MacExtras
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Gui
     Qt${QT_VERSION_MAJOR}::Core

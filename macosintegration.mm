@@ -17,7 +17,11 @@
  */
 
 #include "macosintegration.h"
+
+#include <QtMac>
 #import <MediaPlayer/MediaPlayer.h>
+#import <AppKit/AppKit.h>
+#include <qmmp/metadatamanager.h>
 
 static inline MPNowPlayingPlaybackState mpState(Qmmp::State state)
 {
@@ -142,6 +146,17 @@ void MacOSIntegration::updateTrackInfo()
         MPNowPlayingInfoPropertyElapsedPlaybackTime : @(qMax(m_core->elapsed() / 1000.0, 0.0))
     };
     NSMutableDictionary* nowPlayingInfo = [nowPlayingInfoBase mutableCopy];
+
+    QPixmap cover = MetaDataManager::instance()->getCover(info.path());
+    if (!cover.isNull())
+    {
+        NSImage* coverImage = QtMac::toNSImage(cover);
+        MPMediaItemArtwork* artwork = [[MPMediaItemArtwork alloc] initWithBoundsSize:[coverImage size]
+            requestHandler:^(CGSize size) {
+                return coverImage;
+            }];
+        [nowPlayingInfo setObject:artwork forKey:MPMediaItemPropertyArtwork];
+    }
 
     if (!info.value(Qmmp::TITLE).isEmpty())
     {
