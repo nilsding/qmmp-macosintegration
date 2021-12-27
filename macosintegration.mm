@@ -135,7 +135,11 @@ void MacOSIntegration::updateTrackInfo()
     TrackInfo info = m_core->trackInfo();
 
     NSDictionary* nowPlayingInfoBase = @{
-        MPNowPlayingInfoPropertyMediaType : @(MPNowPlayingInfoMediaTypeAudio)
+        MPNowPlayingInfoPropertyMediaType : @(MPNowPlayingInfoMediaTypeAudio),
+        MPMediaItemPropertyPlaybackDuration : @(qMax(m_core->duration() / 1000.0, 0.0)),
+        MPNowPlayingInfoPropertyPlaybackRate : @(1.0),
+        MPNowPlayingInfoPropertyDefaultPlaybackRate : @(1.0),
+        MPNowPlayingInfoPropertyElapsedPlaybackTime : @(qMax(m_core->elapsed() / 1000.0, 0.0))
     };
     NSMutableDictionary* nowPlayingInfo = [nowPlayingInfoBase mutableCopy];
 
